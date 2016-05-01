@@ -26,7 +26,10 @@ func listsHandler(w http.ResponseWriter, r *http.Request, api *anaconda.TwitterA
 	renderTemplate("lists", w, lists)
 }
 
-func makeHandler(fn func(w http.ResponseWriter, r *http.Request, api *anaconda.TwitterApi), api *anaconda.TwitterApi) http.HandlerFunc {
+func makeHandler(fn func(w http.ResponseWriter,
+	r *http.Request,
+	api *anaconda.TwitterApi),
+	api *anaconda.TwitterApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fn(w, r, api)
 	}
