@@ -1,70 +1,44 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"net/url"
-	"os"
 
-	"github.com/ChimeraCoder/anaconda"
+	//"github.com/ChimeraCoder/anaconda"
+	"github.com/eric-fouillet/anaconda"
 )
 
-var templates = template.Must(template.ParseFiles("lists.html", "home.html"))
+var templates = template.Must(template.ParseFiles("lists.html", "list.html"))
 
-func homeHandler(w http.ResponseWriter, r *http.Request, api *anaconda.TwitterApi) {
-	//renderTemplate("home", w)
-	fmt.Fprintf(w, "Hi")
-}
-
-func listsHandler(w http.ResponseWriter, r *http.Request, api *anaconda.TwitterApi) {
-	lists, err := getAllLists(api)
+func main() {
+	tc := new(TwitterClient)
+	err := tc.authenticate()
+	defer tc.close()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Fatal(err)
 	}
-	renderTemplate("lists", w, lists)
+	http.HandleFunc("/", makeHandler(listsHandler, tc))
+	http.HandleFunc("/list", makeHandler(listHandler, tc))
+	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
 
 func makeHandler(fn func(w http.ResponseWriter,
 	r *http.Request,
-	api *anaconda.TwitterApi),
-	api *anaconda.TwitterApi) http.HandlerFunc {
+	tc *TwitterClient),
+	tc *TwitterClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fn(w, r, api)
+		fn(w, r, tc)
 	}
 }
 
-func main() {
-	api := authenticate()
-	http.HandleFunc("/", makeHandler(homeHandler, api))
-	http.HandleFunc("/lists", makeHandler(listsHandler, api))
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
-}
-
-func authenticate() *anaconda.TwitterApi {
-	consumerKey, consumerSecret := os.Getenv("TWIT_CONSUMER_KEY"), os.Getenv("TWIT_CONSUMER_SECRET")
-	accessToken, accessTokenSecret := os.Getenv("TWIT_ACCESS_TOKEN"), os.Getenv("TWIT_ACCESS_TOKEN_SECRET")
-	if consumerKey == "" || consumerSecret == "" || accessToken == "" || accessTokenSecret == "" {
-		log.Fatal("Missing env variables")
+func renderTemplateList(tmpl string, w http.ResponseWriter, v []anaconda.List) {
+	if err := templates.ExecuteTemplate(w, tmpl+".html", v); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	anaconda.SetConsumerKey(consumerKey)
-	anaconda.SetConsumerSecret(consumerSecret)
-	return anaconda.NewTwitterApi(accessToken, accessTokenSecret)
 }
 
-func getAllLists(api *anaconda.TwitterApi) ([]anaconda.List, error) {
-	v := url.Values{}
-	u, err := api.GetSelf(v)
-	if err != nil {
-		log.Fatal("Could not get current user")
-	}
-	v2 := url.Values{}
-	v2.Set("count", "30")
-	return api.GetListsOwnedBy(u.Id, v2)
-}
-
-func renderTemplate(tmpl string, w http.ResponseWriter, v []anaconda.List) {
+func renderTemplateUser(tmpl string, w http.ResponseWriter, v []anaconda.User) {
 	if err := templates.ExecuteTemplate(w, tmpl+".html", v); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
