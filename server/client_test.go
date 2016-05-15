@@ -14,7 +14,7 @@ func TestAuthenticate(t *testing.T) {
 		{"", "abc", "def", "ghi", "error"},
 		{"", "abc", "def", "ghi", "error"},
 	}
-	tc := new(TwitterClient)
+	tc := new(RealTwitterClient)
 	for _, v := range params {
 		os.Setenv("TWIT_CONSUMER_KEY", v.consKey)
 		os.Setenv("TWIT_CONSUMER_SECRET", v.consSecret)
