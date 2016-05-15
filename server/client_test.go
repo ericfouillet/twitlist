@@ -9,10 +9,8 @@ func TestAuthenticate(t *testing.T) {
 	params := []struct{ consKey, consSecret, accKey, accSecret, expected string }{
 		{"", "abc", "def", "ghi", "error"},
 		{"abc", "", "def", "ghi", "error"},
-		{"", "abc", "def", "ghi", "error"},
-		{"", "abc", "def", "ghi", "error"},
-		{"", "abc", "def", "ghi", "error"},
-		{"", "abc", "def", "ghi", "error"},
+		{"abc", "abc", "", "ghi", "error"},
+		{"ghi", "abc", "def", "", "error"},
 	}
 	tc := new(RealTwitterClient)
 	for _, v := range params {
