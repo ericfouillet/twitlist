@@ -1,4 +1,4 @@
-package server
+package twitlistserver
 
 import (
 	"errors"
@@ -10,8 +10,9 @@ import (
 	"github.com/eric-fouillet/anaconda"
 )
 
-const REFRESH_INTERVAL_MIN = 20 * time.Minute
+const refreshIntervalMin = 20 * time.Minute
 
+// RealTwitterClient is a twitter client interacting with the Twitter API
 type RealTwitterClient struct {
 	api            *anaconda.TwitterApi
 	lists          []anaconda.List
@@ -19,10 +20,12 @@ type RealTwitterClient struct {
 	authenticated  bool
 }
 
+// TwitterClient is an interface representing a Twitter client.
+// Using an interface allows to mock the client and test more easily
 type TwitterClient interface {
 	authenticate() error
 	close()
-	getSelfId() (int64, error)
+	getSelfID() (int64, error)
 	GetListMembers(id int64) ([]anaconda.User, error)
 	GetAllLists() ([]anaconda.List, error)
 }
@@ -45,7 +48,7 @@ func (tc *RealTwitterClient) close() {
 	tc.api.Close()
 }
 
-func (tc *RealTwitterClient) getSelfId() (int64, error) {
+func (tc *RealTwitterClient) getSelfID() (int64, error) {
 	v := url.Values{}
 	u, err := tc.api.GetSelf(v)
 	if err != nil {
@@ -54,19 +57,22 @@ func (tc *RealTwitterClient) getSelfId() (int64, error) {
 	return u.Id, nil
 }
 
+// GetListMembers retrieves all members of a list owned by the currently
+// authenticated user.
 func (tc *RealTwitterClient) GetListMembers(id int64) ([]anaconda.User, error) {
 	v := url.Values{}
 	v.Set("count", "30")
 	return tc.api.GetListMembers(id, v)
 }
 
+// GetAllLists gets all lists for the authenticated user.
 func (tc *RealTwitterClient) GetAllLists() ([]anaconda.List, error) {
 	// Refresh the lists only every REFRESH_INTERVAL_MIN
-	if tc.lists != nil && len(tc.lists) > 0 && time.Since(tc.lastUpdateTime) < REFRESH_INTERVAL_MIN {
+	if tc.lists != nil && len(tc.lists) > 0 && time.Since(tc.lastUpdateTime) < refreshIntervalMin {
 		log.Println("Re-use cached lists")
 		return tc.lists, nil
 	}
-	id, err := tc.getSelfId()
+	id, err := tc.getSelfID()
 	if err != nil {
 		return nil, err
 	}

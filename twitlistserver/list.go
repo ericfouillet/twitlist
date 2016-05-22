@@ -1,4 +1,4 @@
-package server
+package twitlistserver
 
 import (
 	"fmt"
@@ -10,10 +10,10 @@ import (
 	"github.com/eric-fouillet/anaconda"
 )
 
-var listTempl = template.Must(template.New("list").Parse(listTemplateHtml))
+var listTempl = template.Must(template.New("list").Parse(listTemplateHTML))
 
 type listGet struct {
-	Id      int64
+	ID      int64
 	Members []anaconda.User
 }
 
@@ -49,28 +49,28 @@ func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient) {
 
 func listHandlerPut(w http.ResponseWriter, r *http.Request, tc TwitterClient) {
 	v := r.URL.Query()
-	listIdStr := v.Get("listId")
-	memberIdsStr := v.Get("memberIds")
-	if listIdStr == "" || memberIdsStr == "" {
+	listIDStr := v.Get("listId")
+	memberIDsStr := v.Get("memberIds")
+	if listIDStr == "" || memberIDsStr == "" {
 		http.Error(w, "No list ID or member Ids specified", http.StatusInternalServerError)
 		return
 	}
-	listId, err := strconv.ParseInt(listIdStr, 10, 64)
+	listID, err := strconv.ParseInt(listIDStr, 10, 64)
 	if err != nil {
-		http.Error(w, "Id has an incorrect format "+listIdStr, http.StatusInternalServerError)
+		http.Error(w, "Id has an incorrect format "+listIDStr, http.StatusInternalServerError)
 		return
 	}
-	membersIdsList := strings.Split(memberIdsStr, ",")
-	memberIds := make([]int64, 0, len(membersIdsList))
-	for _, mIdStr := range membersIdsList {
-		mId, err := strconv.ParseInt(mIdStr, 10, 64)
+	membersIDsList := strings.Split(memberIDsStr, ",")
+	memberIDs := make([]int64, 0, len(membersIDsList))
+	for _, mIDStr := range membersIDsList {
+		mID, err := strconv.ParseInt(mIDStr, 10, 64)
 		if err != nil {
-			http.Error(w, "Id has an incorrect format "+mIdStr, http.StatusInternalServerError)
+			http.Error(w, "Id has an incorrect format "+mIDStr, http.StatusInternalServerError)
 			return
 		}
-		memberIds = append(memberIds, mId)
+		memberIDs = append(memberIDs, mID)
 	}
-	fmt.Fprintln(w, listId, memberIds)
+	fmt.Fprintln(w, listID, memberIDs)
 }
 
 func renderTemplateUser(tmpl string, w http.ResponseWriter, v listGet) {
@@ -79,9 +79,9 @@ func renderTemplateUser(tmpl string, w http.ResponseWriter, v listGet) {
 	}
 }
 
-const listTemplateHtml = `
+const listTemplateHTML = `
 <h1>List detail</h1>
-<form action="/list/{{.Id}}">
+<form action="/list/{{.ID}}">
 <table border="1">
   <!--<th>
     <td>Name</td>

@@ -1,12 +1,13 @@
-package server
+package twitlistserver
 
 import (
 	"log"
 	"net/http"
 )
 
-const PathPrefix = "/lists/"
+const pathPrefix = "/lists/"
 
+// RegisterHandlers registers all handlers to serve requests.
 func RegisterHandlers() {
 	tc := new(DummyTwitterClient)
 	err := tc.authenticate()
@@ -14,8 +15,8 @@ func RegisterHandlers() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	http.HandleFunc(PathPrefix, makeHandler(listsHandler, tc))
-	http.HandleFunc(PathPrefix+"list", makeHandler(listHandler, tc))
+	http.HandleFunc(pathPrefix, makeHandler(listsHandler, tc))
+	http.HandleFunc(pathPrefix+"list", makeHandler(listHandler, tc))
 }
 
 func makeHandler(fn func(w http.ResponseWriter,

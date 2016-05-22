@@ -1,4 +1,4 @@
-package server
+package twitlistserver
 
 import (
 	"html/template"
@@ -7,7 +7,7 @@ import (
 	"github.com/eric-fouillet/anaconda"
 )
 
-var listsTempl = template.Must(template.New("list").Parse(listsTemplateHtml))
+var listsTempl = template.Must(template.New("list").Parse(listsTemplateHTML))
 
 func listsHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) {
 	lists, err := tc.GetAllLists()
@@ -23,7 +23,7 @@ func renderTemplateList(w http.ResponseWriter, v []anaconda.List) {
 	}
 }
 
-const listsTemplateHtml = `
+const listsTemplateHTML = `
 <h1>Lists</h1>
 <ul>
 {{range $entry := .}}

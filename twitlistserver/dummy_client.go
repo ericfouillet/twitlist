@@ -1,4 +1,4 @@
-package server
+package twitlistserver
 
 import (
 	"fmt"
@@ -7,6 +7,8 @@ import (
 	"github.com/eric-fouillet/anaconda"
 )
 
+// DummyTwitterClient is a Twitter client serving fake data.
+// For test only.
 type DummyTwitterClient struct {
 	api            *anaconda.TwitterApi
 	lists          []anaconda.List
@@ -21,10 +23,12 @@ func (tc *DummyTwitterClient) authenticate() error {
 func (tc *DummyTwitterClient) close() {
 }
 
-func (tc *DummyTwitterClient) getSelfId() (int64, error) {
+func (tc *DummyTwitterClient) getSelfID() (int64, error) {
 	return 1, nil
 }
 
+// GetListMembers retrieves all members of a list owned by the currently
+// authenticated user.
 func (tc *DummyTwitterClient) GetListMembers(id int64) ([]anaconda.User, error) {
 	users := make([]anaconda.User, 0, 10)
 	var add func()
@@ -39,6 +43,7 @@ func (tc *DummyTwitterClient) GetListMembers(id int64) ([]anaconda.User, error) 
 	return users, nil
 }
 
+// GetAllLists gets all lists for the authenticated user.
 func (tc *DummyTwitterClient) GetAllLists() ([]anaconda.List, error) {
 	lists := make([]anaconda.List, 0, 5)
 	var add func()
