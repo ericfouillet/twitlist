@@ -33,7 +33,7 @@ func listHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error
 func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
 	id, err := getListID(r)
 	if err != nil {
-		return fmt.Errorf("Id has an incorrect format ", id)
+		return fmt.Errorf("Id has an incorrect format %v", id)
 	}
 	users, err := tc.GetListMembers(id)
 	if err != nil {
@@ -49,7 +49,7 @@ type memberIds []struct{ ID int64 }
 func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
 	id, err := getListID(r)
 	if err != nil {
-		return fmt.Errorf("Id has an incorrect format ", id)
+		return fmt.Errorf("Id has an incorrect format %v", id)
 	}
 	var members memberIds
 	if err := json.NewDecoder(r.Body).Decode(&members); err != nil {
