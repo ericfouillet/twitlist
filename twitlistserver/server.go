@@ -16,14 +16,18 @@ func RegisterHandlers() {
 		log.Fatal(err)
 	}
 	http.HandleFunc(pathPrefix, makeHandler(listsHandler, tc))
-	http.HandleFunc(pathPrefix+"list", makeHandler(listHandler, tc))
+	http.HandleFunc(pathPrefix+"list/", makeHandler(listHandler, tc))
 }
 
 func makeHandler(fn func(w http.ResponseWriter,
 	r *http.Request,
-	tc TwitterClient),
+	tc TwitterClient) error,
 	tc TwitterClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fn(w, r, tc)
+		err := fn(w, r, tc)
+		if err == nil {
+			return
+		}
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 }

@@ -1,8 +1,10 @@
 package twitlistserver
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
-	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -10,90 +12,63 @@ import (
 	"github.com/eric-fouillet/anaconda"
 )
 
-var listTempl = template.Must(template.New("list").Parse(listTemplateHTML))
-
 type listGet struct {
 	ID      int64
 	Members []anaconda.User
 }
 
-func listHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) {
+// listHandler handles GET and POST to /lists/list/{id}
+func listHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
+	log.Println("Entered listHandler", r.Method)
 	switch r.Method {
 	case "GET":
-		listHandlerGet(w, r, tc)
-	case "PUT":
-		listHandlerPut(w, r, tc)
+		return listHandlerGet(w, r, tc)
+	case "POST":
+		return listHandlerPost(w, r, tc)
 	}
+	return errors.New(fmt.Sprintln("Unsupported method", r.Method))
 }
 
-func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient) {
-	v := r.URL.Query()
-	idStr := v.Get("id")
-	if idStr == "" {
-		http.Error(w, "No list ID specified", http.StatusInternalServerError)
-		return
-	}
-	id, err := strconv.ParseInt(idStr, 10, 64)
+// listHandler handles GET requests to /lists/list/{id}
+func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
+	id, err := getListId(r)
 	if err != nil {
-		http.Error(w, "Id has an incorrect format "+idStr, http.StatusInternalServerError)
-		return
+		return errors.New(fmt.Sprintf("Id has an incorrect format ", id))
 	}
 	users, err := tc.GetListMembers(id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return err
 	}
 	render := listGet{id, users}
-	renderTemplateUser("list", w, render)
+	return json.NewEncoder(w).Encode(render)
 }
 
-func listHandlerPut(w http.ResponseWriter, r *http.Request, tc TwitterClient) {
-	v := r.URL.Query()
-	listIDStr := v.Get("listId")
-	memberIDsStr := v.Get("memberIds")
-	if listIDStr == "" || memberIDsStr == "" {
-		http.Error(w, "No list ID or member Ids specified", http.StatusInternalServerError)
-		return
-	}
-	listID, err := strconv.ParseInt(listIDStr, 10, 64)
+type memberIds []struct{ Id int64 }
+
+// listHanlderPut handles POST requests to /lists/list/{id}
+func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
+	id, err := getListId(r)
 	if err != nil {
-		http.Error(w, "Id has an incorrect format "+listIDStr, http.StatusInternalServerError)
-		return
+		return errors.New(fmt.Sprintf("Id has an incorrect format ", id))
 	}
-	membersIDsList := strings.Split(memberIDsStr, ",")
-	memberIDs := make([]int64, 0, len(membersIDsList))
-	for _, mIDStr := range membersIDsList {
-		mID, err := strconv.ParseInt(mIDStr, 10, 64)
-		if err != nil {
-			http.Error(w, "Id has an incorrect format "+mIDStr, http.StatusInternalServerError)
-			return
-		}
-		memberIDs = append(memberIDs, mID)
+	var members memberIds
+	if err := json.NewDecoder(r.Body).Decode(&members); err != nil {
+		return err
 	}
-	fmt.Fprintln(w, listID, memberIDs)
+	fmt.Fprintln(w, id, members)
+	return nil
 }
 
-func renderTemplateUser(tmpl string, w http.ResponseWriter, v listGet) {
-	if err := listTempl.Execute(w, v); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+func getListId(r *http.Request) (int64, error) {
+	rawPath := r.URL.Path
+	last := strings.LastIndex(rawPath, "/")
+	if last == -1 {
+		return -1, errors.New("No list ID specified")
 	}
+	idStr := rawPath[last+1:]
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		return -1, errors.New("Id has an incorrect format " + idStr)
+	}
+	return id, nil
 }
-
-const listTemplateHTML = `
-<h1>List detail</h1>
-<form action="/list/{{.ID}}">
-<table border="1">
-  <!--<th>
-    <td>Name</td>
-    <td>In list</td>
-  </th>-->
-{{range $entry := .Members}}
-<tr>
-<td>{{$entry.Name }}</td>
-<td><input name="{{$entry.Id}}" type="checkbox" checked/></td>
-</tr>
-{{end}}
-</table>
-<input type="submit" value="Save"/>
-</form>
-`

@@ -9,6 +9,6 @@ import (
 
 func main() {
 	twitlistserver.RegisterHandlers()
-	//http.Handle("/", http.FileServer(http.Dir("static")))
+	http.Handle("/", http.FileServer(http.Dir("static")))
 	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }

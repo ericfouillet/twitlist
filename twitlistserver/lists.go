@@ -1,33 +1,19 @@
 package twitlistserver
 
 import (
-	"html/template"
+	"encoding/json"
 	"net/http"
 
 	"github.com/eric-fouillet/anaconda"
 )
 
-var listsTempl = template.Must(template.New("list").Parse(listsTemplateHTML))
-
-func listsHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) {
+// listsHandler handles GET requests to /lists
+// Returns an array of lists
+func listsHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
 	lists, err := tc.GetAllLists()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	renderTemplateList(w, lists)
+	res := struct{ Lists []anaconda.List }{lists}
+	return json.NewEncoder(w).Encode(res)
 }
-
-func renderTemplateList(w http.ResponseWriter, v []anaconda.List) {
-	if err := listsTempl.Execute(w, v); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-}
-
-const listsTemplateHTML = `
-<h1>Lists</h1>
-<ul>
-{{range $entry := .}}
-<li><a href="/lists/list?id={{$entry.Id}}">{{$entry.Name}}</a></li>
-{{end}}
-</ul>
-`

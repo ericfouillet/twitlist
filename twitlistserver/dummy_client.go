@@ -34,7 +34,7 @@ func (tc *DummyTwitterClient) GetListMembers(id int64) ([]anaconda.User, error) 
 	var add func()
 	var idu int64 = 1
 	add = func() {
-		users = append(users, anaconda.User{Id: idu, Name: fmt.Sprint("user", id)})
+		users = append(users, anaconda.User{Id: idu, Name: fmt.Sprint("user", idu)})
 		idu++
 	}
 	for i := 0; i < 10; i++ {
