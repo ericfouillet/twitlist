@@ -31,9 +31,9 @@ func listHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error
 
 // listHandler handles GET requests to /lists/list/{id}
 func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
-	id, err := getListId(r)
+	id, err := getListID(r)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Id has an incorrect format ", id))
+		return fmt.Errorf("Id has an incorrect format ", id)
 	}
 	users, err := tc.GetListMembers(id)
 	if err != nil {
@@ -43,13 +43,13 @@ func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient) er
 	return json.NewEncoder(w).Encode(render)
 }
 
-type memberIds []struct{ Id int64 }
+type memberIds []struct{ ID int64 }
 
 // listHanlderPut handles POST requests to /lists/list/{id}
 func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
-	id, err := getListId(r)
+	id, err := getListID(r)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Id has an incorrect format ", id))
+		return fmt.Errorf("Id has an incorrect format ", id)
 	}
 	var members memberIds
 	if err := json.NewDecoder(r.Body).Decode(&members); err != nil {
@@ -59,7 +59,7 @@ func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient) e
 	return nil
 }
 
-func getListId(r *http.Request) (int64, error) {
+func getListID(r *http.Request) (int64, error) {
 	rawPath := r.URL.Path
 	last := strings.LastIndex(rawPath, "/")
 	if last == -1 {
