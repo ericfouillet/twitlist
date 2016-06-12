@@ -104,6 +104,8 @@ func (tc *RealTwitterClient) GetAllLists() ([]anaconda.List, error) {
 	return tc.lists, nil
 }
 
+// UpdateListMembers updates the members of a list based on the
+// members provided by the user (requestedMembers).
 func (tc *RealTwitterClient) UpdateListMembers(listID int64, requestedMembers int64arr) ([]anaconda.User, error) {
 	id, err := tc.getSelfID()
 	if err != nil {

@@ -60,6 +60,8 @@ func (tc *DummyTwitterClient) GetAllLists() ([]anaconda.List, error) {
 	return tc.lists, nil
 }
 
+// UpdateListMembers updates the members of a list based on the new
+// members received from the user.
 func (tc *DummyTwitterClient) UpdateListMembers(listID int64, requestedMembers int64arr) ([]anaconda.User, error) {
 	existingMembers, err := tc.GetListMembers(listID)
 	if err != nil {
@@ -67,7 +69,7 @@ func (tc *DummyTwitterClient) UpdateListMembers(listID int64, requestedMembers i
 	}
 	added, unchanged, destroyed := diffUsers(existingMembers, requestedMembers)
 
-	newUsers := make([]anaconda.User, 0)
+	var newUsers []anaconda.User
 
 	if len(added) > 0 {
 		for _, nu := range added {

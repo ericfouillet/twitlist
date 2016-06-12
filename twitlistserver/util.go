@@ -45,7 +45,7 @@ func diffUsers(existingMembers []anaconda.User, requestedMembers int64arr) (adde
 }
 
 func updateMemberList(existing []anaconda.User, unchanged []int64, newUsers []anaconda.User) []anaconda.User {
-	updatedMemberList := make([]anaconda.User, 0)
+	var updatedMemberList []anaconda.User
 	for _, u := range existing {
 		for _, un := range unchanged {
 			if un == u.Id {
