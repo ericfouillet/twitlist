@@ -20,43 +20,52 @@ type listGet struct {
 // listHandler handles GET and POST to /lists/list/{id}
 func listHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
 	log.Println("Entered listHandler", r.Method)
-	switch r.Method {
-	case "GET":
-		return listHandlerGet(w, r, tc)
-	case "POST":
-		return listHandlerPost(w, r, tc)
-	}
-	return errors.New(fmt.Sprintln("Unsupported method", r.Method))
-}
-
-// listHandler handles GET requests to /lists/list/{id}
-func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
 	id, err := getListID(r)
 	if err != nil {
 		return fmt.Errorf("Id has an incorrect format %v", id)
 	}
-	users, err := tc.GetListMembers(id)
+	switch r.Method {
+	case "GET":
+		return listHandlerGet(w, r, tc, id)
+	case "POST":
+		return listHandlerPost(w, r, tc, id)
+	default:
+		return errors.New(fmt.Sprintln("Unsupported method", r.Method))
+	}
+}
+
+// listHandlerGet handles GET requests to /lists/list/{id}
+func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient, listID int64) error {
+	users, err := tc.GetListMembers(listID)
 	if err != nil {
 		return err
 	}
-	render := listGet{id, users}
+	render := listGet{listID, users}
 	return json.NewEncoder(w).Encode(render)
 }
 
-type memberIds []struct{ ID int64 }
+type memberIDs []struct{ ID int64 }
 
-// listHanlderPut handles POST requests to /lists/list/{id}
-func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
-	id, err := getListID(r)
+// listHandlerPut handles POST requests to /lists/list/{id}
+func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient, listID int64) error {
+	listID, err := getListID(r)
 	if err != nil {
-		return fmt.Errorf("Id has an incorrect format %v", id)
+		return fmt.Errorf("Id has an incorrect format %v", listID)
 	}
-	var members memberIds
+	var members memberIDs
 	if err := json.NewDecoder(r.Body).Decode(&members); err != nil {
 		return err
 	}
-	fmt.Fprintln(w, id, members)
-	return nil
+	membersList := make([]int64, 0, len(members))
+	for _, m := range members {
+		membersList = append(membersList, m.ID)
+	}
+	newMembers, err := tc.UpdateListMembers(listID, membersList)
+	if err != nil {
+		return err
+	}
+	render := listGet{listID, newMembers}
+	return json.NewEncoder(w).Encode(render)
 }
 
 func getListID(r *http.Request) (int64, error) {

@@ -12,6 +12,7 @@ import (
 type DummyTwitterClient struct {
 	api            *anaconda.TwitterApi
 	lists          []anaconda.List
+	listMembers    map[int64][]anaconda.User
 	lastUpdateTime time.Time
 	authenticated  bool
 }
@@ -57,4 +58,32 @@ func (tc *DummyTwitterClient) GetAllLists() ([]anaconda.List, error) {
 	}
 	tc.lists = lists
 	return tc.lists, nil
+}
+
+func (tc *DummyTwitterClient) UpdateListMembers(listID int64, requestedMembers int64arr) ([]anaconda.User, error) {
+	existingMembers, err := tc.GetListMembers(listID)
+	if err != nil {
+		return nil, err
+	}
+	added, unchanged, destroyed := diffUsers(existingMembers, requestedMembers)
+
+	newUsers := make([]anaconda.User, 0)
+
+	if len(added) > 0 {
+		for _, nu := range added {
+			fmt.Printf("Added user %v\n", nu)
+			newUsers = append(newUsers, anaconda.User{Id: nu, Name: fmt.Sprint("user", nu)})
+		}
+	}
+
+	if len(destroyed) > 0 {
+		for _, du := range destroyed {
+			fmt.Printf("Removed user %v\n", du)
+		}
+	}
+
+	updateMemberList(existingMembers, unchanged, newUsers)
+
+	// TODO update members list
+	return tc.GetListMembers(listID)
 }
