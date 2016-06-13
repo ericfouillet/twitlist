@@ -12,7 +12,7 @@ import (
 func listsHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
 	lists, err := tc.GetAllLists()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return err
 	}
 	res := struct{ Lists []anaconda.List }{lists}
 	return json.NewEncoder(w).Encode(res)

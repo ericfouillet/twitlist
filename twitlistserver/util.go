@@ -45,16 +45,16 @@ func diffUsers(existingMembers []anaconda.User, requestedMembers int64arr) (adde
 }
 
 func updateMemberList(existing []anaconda.User, unchanged []int64, newUsers []anaconda.User) []anaconda.User {
-	var updatedMemberList []anaconda.User
+	var updated []anaconda.User
 	for _, u := range existing {
 		for _, un := range unchanged {
 			if un == u.Id {
-				updatedMemberList = append(updatedMemberList, u)
+				updated = append(updated, u)
 			}
 		}
 	}
 	for _, a := range newUsers {
-		updatedMemberList = append(updatedMemberList, a)
+		updated = append(updated, a)
 	}
-	return updatedMemberList
+	return updated
 }

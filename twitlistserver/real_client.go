@@ -13,17 +13,6 @@ import (
 
 const refreshIntervalMin = 20 * time.Minute
 
-// TwitterClient is an interface representing a Twitter client.
-// Using an interface allows to mock the client and test more easily
-type TwitterClient interface {
-	authenticate() error
-	close()
-	getSelfID() (int64, error)
-	GetAllLists() ([]anaconda.List, error)
-	GetListMembers(id int64) ([]anaconda.User, error)
-	UpdateListMembers(listID int64, requestedMembers int64arr) ([]anaconda.User, error)
-}
-
 // RealTwitterClient is a twitter client interacting with the Twitter API
 type RealTwitterClient struct {
 	api            *anaconda.TwitterApi

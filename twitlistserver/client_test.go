@@ -38,17 +38,21 @@ func TestUserDiff(t *testing.T) {
 		existing  []anaconda.User
 		requested int64arr
 		added     []int64
+		unchanged []int64
 		destroyed []int64
 	}{
-		{[]anaconda.User{anaconda.User{Id: 1, Name: "user1"}, anaconda.User{Id: 2, Name: "user2"}}, int64arr{1, 3}, []int64{3}, []int64{2}},
-		{[]anaconda.User{}, int64arr{1, 3}, []int64{1, 3}, []int64{}},
-		{[]anaconda.User{anaconda.User{Id: 1, Name: "user1"}}, int64arr{3}, []int64{3}, []int64{1}},
-		{[]anaconda.User{anaconda.User{Id: 1, Name: "user1"}, anaconda.User{Id: 2, Name: "user2"}}, int64arr{1, 2}, []int64{}, []int64{}},
-		{[]anaconda.User{anaconda.User{Id: 1, Name: "user1"}, anaconda.User{Id: 2, Name: "user2"}, anaconda.User{Id: 3, Name: "user3"}, anaconda.User{Id: 5, Name: "user5"}, anaconda.User{Id: 7, Name: "user7"}}, int64arr{1, 2, 5, 6}, []int64{6}, []int64{3, 7}},
+		{[]anaconda.User{anaconda.User{Id: 1, Name: "user1"}, anaconda.User{Id: 2, Name: "user2"}}, int64arr{1, 3}, []int64{3}, []int64{1}, []int64{2}},
+		{[]anaconda.User{}, int64arr{1, 3}, []int64{1, 3}, []int64{}, []int64{}},
+		{[]anaconda.User{anaconda.User{Id: 1, Name: "user1"}}, int64arr{3}, []int64{3}, []int64{}, []int64{1}},
+		{[]anaconda.User{anaconda.User{Id: 1, Name: "user1"}, anaconda.User{Id: 2, Name: "user2"}}, int64arr{1, 2}, []int64{}, []int64{1, 2}, []int64{}},
+		{[]anaconda.User{anaconda.User{Id: 1, Name: "user1"}, anaconda.User{Id: 2, Name: "user2"}, anaconda.User{Id: 3, Name: "user3"}, anaconda.User{Id: 5, Name: "user5"}, anaconda.User{Id: 7, Name: "user7"}}, int64arr{1, 2, 5, 6}, []int64{6}, []int64{1, 2, 5}, []int64{3, 7}},
 	}
 	for _, v := range params {
-		added, destroyed := diffUsers(v.existing, v.requested)
+		added, unchanged, destroyed := diffUsers(v.existing, v.requested)
 		if !compareArrays(added, v.added) {
+			t.Fail()
+		}
+		if !compareArrays(unchanged, v.unchanged) {
 			t.Fail()
 		}
 		if !compareArrays(destroyed, v.destroyed) {
