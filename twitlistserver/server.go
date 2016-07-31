@@ -35,10 +35,10 @@ func RegisterHandlers() {
 		log.Fatal("Unsupported client type : " + *clientType)
 	}
 	err := tc.authenticate()
-	defer tc.close()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer tc.close()
 	http.HandleFunc(pathPrefix, makeHandler(listsHandler, tc))
 	http.HandleFunc(pathPrefix+"list/", makeHandler(listHandler, tc))
 }

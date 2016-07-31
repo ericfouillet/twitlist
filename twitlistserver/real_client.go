@@ -58,7 +58,7 @@ func (tc *RealTwitterClient) GetListMembers(id int64) ([]anaconda.User, error) {
 	// Refresh the list members only every REFRESH_INTERVAL_MIN
 	members, ok := tc.listMembers[id]
 	if ok && time.Since(tc.lastUpdateTime) < refreshIntervalMin {
-		log.Println("Re-use cached list members")
+		log.Println("Re-using cached list members")
 		return members, nil
 	}
 	v := url.Values{}
@@ -76,7 +76,7 @@ func (tc *RealTwitterClient) GetListMembers(id int64) ([]anaconda.User, error) {
 func (tc *RealTwitterClient) GetAllLists() ([]anaconda.List, error) {
 	// Refresh the lists only every REFRESH_INTERVAL_MIN
 	if tc.lists != nil && len(tc.lists) > 0 && time.Since(tc.lastUpdateTime) < refreshIntervalMin {
-		log.Println("Re-use cached lists")
+		log.Println("Re-using cached lists")
 		return tc.lists, nil
 	}
 	id, err := tc.getSelfID()
