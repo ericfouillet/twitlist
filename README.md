@@ -8,7 +8,7 @@ The Twitter web interface doesn't allow adding/removing multiple users from a li
 
 Lists are a good way to separate accounts by theme, so I created this small application to manage lists more easily.
 
-The server is in Go (exposing a REST interface), the UI is in Elm. This is a workin progress.
+The server is in Go (exposing a REST interface), the UI is in Elm. This is a work in progress.
 
 ## Installation:
 
