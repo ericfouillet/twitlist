@@ -28,9 +28,9 @@ func RegisterHandlers() {
 	var tc TwitterClient
 	switch *clientType {
 	case "real":
-		tc = new(DummyTwitterClient)
-	case "dummy":
 		tc = new(RealTwitterClient)
+	case "dummy":
+		tc = new(DummyTwitterClient)
 	default:
 		log.Fatal("Unsupported client type : " + *clientType)
 	}

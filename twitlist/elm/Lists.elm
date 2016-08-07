@@ -5,7 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
 import Task
-import Json.Decode as Json
+import Json.Decode as Json exposing (..)
 
 
 main =
@@ -32,7 +32,7 @@ init = (Model [], getTwitterLists)
 type Msg = UpdateList TwitterList.Msg
   | GetLists
   | FetchSuccess (List TwitterList.Model)
-  | FetchFail String
+  | FetchFail Http.Error
 
 update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -49,19 +49,22 @@ update msg model =
 
 getTwitterLists: Cmd Msg
 getTwitterLists =
-  let url = "http://localhosts/lists"
-  in Task.perform FetchFail FetchSuccess (Http.get (Json.list Json.string) url)
+  let url = "http://localhosts:8080/lists"
+  in Task.perform FetchFail FetchSuccess (Http.get decodeLists url)
 
-decodeLists: Json.Decoder String
+decodeLists: Json.Decoder (List TwitterList.Model)
 decodeLists =
-  Json.at ["data", "image_url"] Json.string
+  Json.at ["Lists"] (Json.list decodeList)
+
+decodeList: Json.Decoder TwitterList.Model
+decodeList =
+  Json.object3 TwitterList.Model ("id" := Json.int) ("name" := Json.string) (Json.null [])
 
 -- VIEW
 
 view: Model -> Html Msg
 view model =
   div [] (List.map viewTwitterList model.lists)
-
 
 viewTwitterList: TwitterList.Model -> Html Msg
 viewTwitterList model = 
