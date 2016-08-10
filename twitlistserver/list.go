@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -12,14 +11,13 @@ import (
 	"github.com/eric-fouillet/anaconda"
 )
 
-type listGet struct {
+type ListGet struct {
 	ID      int64
 	Members []anaconda.User
 }
 
 // listHandler handles GET and POST to /lists/list/{id}
-func listHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
-	log.Println("Entered listHandler", r.Method)
+func ListHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
 	id, err := getListID(r)
 	if err != nil {
 		return fmt.Errorf("Id has an incorrect format %v", id)
@@ -40,11 +38,11 @@ func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient, li
 	if err != nil {
 		return err
 	}
-	render := listGet{listID, users}
+	render := ListGet{listID, users}
 	return json.NewEncoder(w).Encode(render)
 }
 
-type memberIDs []struct{ ID int64 }
+type MemberIDs []struct{ ID int64 }
 
 // listHandlerPut handles POST requests to /lists/list/{id}
 func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient, listID int64) error {
@@ -52,7 +50,7 @@ func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient, l
 	if err != nil {
 		return fmt.Errorf("Id has an incorrect format %v", listID)
 	}
-	var members memberIDs
+	var members MemberIDs
 	if err := json.NewDecoder(r.Body).Decode(&members); err != nil {
 		return err
 	}
@@ -64,7 +62,7 @@ func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient, l
 	if err != nil {
 		return err
 	}
-	render := listGet{listID, newMembers}
+	render := ListGet{listID, newMembers}
 	return json.NewEncoder(w).Encode(render)
 }
 

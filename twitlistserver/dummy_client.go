@@ -31,6 +31,9 @@ func (tc *DummyTwitterClient) getSelfID() (int64, error) {
 // GetListMembers retrieves all members of a list owned by the currently
 // authenticated user.
 func (tc *DummyTwitterClient) GetListMembers(id int64) ([]anaconda.User, error) {
+	if tc.listMembers == nil {
+		tc.listMembers = make(map[int64][]anaconda.User)
+	}
 	users := make([]anaconda.User, 0, 10)
 	var add func()
 	var idu int64 = 1
@@ -41,6 +44,7 @@ func (tc *DummyTwitterClient) GetListMembers(id int64) ([]anaconda.User, error) 
 	for i := 0; i < 10; i++ {
 		add()
 	}
+	tc.listMembers[id] = users
 	return users, nil
 }
 
@@ -84,8 +88,7 @@ func (tc *DummyTwitterClient) UpdateListMembers(listID int64, requestedMembers i
 		}
 	}
 
-	updateMemberList(existingMembers, unchanged, newUsers)
+	tc.listMembers[listID] = updateMemberList(existingMembers, unchanged, newUsers)
 
-	// TODO update members list
-	return tc.GetListMembers(listID)
+	return tc.listMembers[listID], nil
 }

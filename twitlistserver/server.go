@@ -39,11 +39,11 @@ func RegisterHandlers() {
 		log.Fatal(err)
 	}
 	defer tc.close()
-	http.HandleFunc(pathPrefix, makeHandler(listsHandler, tc))
-	http.HandleFunc(pathPrefix+"list/", makeHandler(listHandler, tc))
+	http.HandleFunc(pathPrefix, MakeHandler(ListsHandler, tc))
+	http.HandleFunc(pathPrefix+"list/", MakeHandler(ListHandler, tc))
 }
 
-func makeHandler(fn func(w http.ResponseWriter,
+func MakeHandler(fn func(w http.ResponseWriter,
 	r *http.Request,
 	tc TwitterClient) error,
 	tc TwitterClient) http.HandlerFunc {

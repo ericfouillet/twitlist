@@ -9,7 +9,7 @@ import (
 
 // listsHandler handles GET requests to /lists
 // Returns an array of lists
-func listsHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
+func ListsHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
 	lists, err := tc.GetAllLists()
 	if err != nil {
 		return err
