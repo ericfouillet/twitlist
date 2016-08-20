@@ -4,4 +4,4 @@ go:
   - tip
 
 install:
-  - go get github.com/eric-fouillet/anonconda
+  - go get github.com/eric-fouillet/anaconda
