@@ -1,6 +1,7 @@
 package twitlistserver
 
 import (
+	"net/http"
 	"sort"
 
 	"github.com/eric-fouillet/anaconda"
@@ -57,4 +58,14 @@ func updateMemberList(existing []anaconda.User, unchanged []int64, newUsers []an
 		updated = append(updated, a)
 	}
 	return updated
+}
+
+// SetHeader sets the relevant headers to allow cross-domain calls
+func SetHeader(w http.ResponseWriter, method string) {
+	// allow cross domain AJAX requests
+	//w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Methods", method)
+	w.Header().Add("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Content-Type", "application/json")
 }

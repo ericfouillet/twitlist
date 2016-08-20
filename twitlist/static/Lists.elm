@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 import Http
 import Task
 import Json.Decode as Json exposing (..)
+import Debug
 
 
 main =
@@ -42,18 +43,22 @@ update msg model =
       UpdateList m ->
         (model, Cmd.none)
       FetchSuccess plists ->
+        Debug.log "Entering FetchSuccess"
         ({ model | lists = plists }, Cmd.none)
-      FetchFail _ ->
+      FetchFail error ->
+        Debug.log (toString error)
         (model, Cmd.none)
 
 
 getTwitterLists: Cmd Msg
 getTwitterLists =
-  let url = "http://localhosts:8080/lists"
+  --let url = "http://localhost:8080/lists"
+  let url = "/lists"
   in Task.perform FetchFail FetchSuccess (Http.get decodeLists url)
 
 decodeLists: Json.Decoder (List TwitterList.Model)
 decodeLists =
+  Debug.log "Entering decodeLists"
   Json.at ["Lists"] (Json.list decodeList)
 
 decodeList: Json.Decoder TwitterList.Model

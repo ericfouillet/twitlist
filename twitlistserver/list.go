@@ -11,12 +11,13 @@ import (
 	"github.com/eric-fouillet/anaconda"
 )
 
+// ListGet holds the result of a request to get a list of list members
 type ListGet struct {
 	ID      int64
 	Members []anaconda.User
 }
 
-// listHandler handles GET and POST to /lists/list/{id}
+// ListHandler handles GET and POST to /lists/list/{id}
 func ListHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
 	id, err := getListID(r)
 	if err != nil {
@@ -39,9 +40,11 @@ func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient, li
 		return err
 	}
 	render := ListGet{listID, users}
+	SetHeader(w, "GET")
 	return json.NewEncoder(w).Encode(render)
 }
 
+// MemberIDs is a slice of members IDs (as int64)
 type MemberIDs []struct{ ID int64 }
 
 // listHandlerPut handles POST requests to /lists/list/{id}
@@ -63,6 +66,7 @@ func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient, l
 		return err
 	}
 	render := ListGet{listID, newMembers}
+	SetHeader(w, "PUT")
 	return json.NewEncoder(w).Encode(render)
 }
 

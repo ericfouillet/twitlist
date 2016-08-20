@@ -43,6 +43,8 @@ func RegisterHandlers() {
 	http.HandleFunc(pathPrefix+"list/", MakeHandler(ListHandler, tc))
 }
 
+// MakeHandler builds a handler that uses takes a TwitterApi to
+// performs its requests.
 func MakeHandler(fn func(w http.ResponseWriter,
 	r *http.Request,
 	tc TwitterClient) error,
