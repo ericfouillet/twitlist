@@ -102,7 +102,7 @@ func makeMember(au anaconda.User) TwitterMember {
 }
 
 func makeList(id int64, name string, desc string, members []anaconda.User) TwitterList {
-	var memberList []TwitterMember
+	memberList := make([]TwitterMember, 0)
 	for _, u := range members {
 		memberList = append(memberList, makeMember(u))
 	}

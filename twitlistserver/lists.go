@@ -27,7 +27,7 @@ func ListsHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) erro
 }
 
 func makeLists(alists []anaconda.List) TwitterLists {
-	var lists []TwitterList
+	lists := make([]TwitterList, 0)
 	for _, ll := range alists {
 		lists = append(lists, makeList(ll.Id, ll.Name, ll.Description, nil))
 	}
