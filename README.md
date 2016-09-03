@@ -18,4 +18,4 @@ Work in progress
 
 ## Dependencies
 
-This depends on a slightly modified version of Anaconda, to add missing API calls. It is forked under my account.
+This depends on a slightly modified version of [Anaconda](https://github.com/ChimeraCoder/anaconda), to add missing API calls. It is forked under my account.
