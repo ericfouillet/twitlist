@@ -1,4 +1,5 @@
 import TwitterList
+import ListMember
 import Html exposing (..)
 import Html.App as Html
 import Html.Attributes exposing (..)
@@ -52,18 +53,31 @@ update msg model =
 
 getTwitterLists: Cmd Msg
 getTwitterLists =
-  --let url = "http://localhost:8080/lists"
   let url = "/lists"
   in Task.perform FetchFail FetchSuccess (Http.get decodeLists url)
 
 decodeLists: Json.Decoder (List TwitterList.Model)
 decodeLists =
   Debug.log "Entering decodeLists"
-  Json.at ["Lists"] (Json.list decodeList)
+  Json.at ["twitterLists"] (Json.list decodeList)
 
 decodeList: Json.Decoder TwitterList.Model
 decodeList =
-  Json.object3 TwitterList.Model ("id" := Json.int) ("name" := Json.string) (Json.null [])
+  Debug.log "Entering decodeList"
+  Json.object4 TwitterList.Model
+  (Json.at ["id"] Json.int)
+  (Json.at ["name"] Json.string)
+  (Json.at ["description"] Json.string)
+  (Json.at ["members"] (Json.list decodeMember))
+
+decodeMember: Json.Decoder ListMember.Model
+decodeMember =
+  Debug.log "Entering decodeMember"
+  Json.object4 ListMember.Model
+  (Json.at ["id"] Json.int)
+  (Json.at ["name"] Json.string)
+  (Json.at ["description"] Json.string)
+  (oneOf [ "selected" := Json.bool, succeed False ])
 
 -- VIEW
 

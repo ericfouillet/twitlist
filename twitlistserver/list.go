@@ -11,10 +11,23 @@ import (
 	"github.com/eric-fouillet/anaconda"
 )
 
-// ListGet holds the result of a request to get a list of list members
-type ListGet struct {
-	ID      int64
-	Members []anaconda.User
+// TwitterList holds basic information about a Twitter list.
+// This contains only the information required to process actions on
+// the list.
+type TwitterList struct {
+	ID          int64           `json:"id"`
+	Name        string          `json:"name"`
+	Description string          `json:"description"`
+	Members     []TwitterMember `json:"members"`
+}
+
+// TwitterMember holds limited details about a Twitter list member.
+// Only essential details are used, since the UI does not need to have
+// everything to maintain the lists.
+type TwitterMember struct {
+	ID          int64  `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 // ListHandler handles GET and POST to /lists/list/{id}
@@ -39,7 +52,7 @@ func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient, li
 	if err != nil {
 		return err
 	}
-	render := ListGet{listID, users}
+	render := makeList(listID, "N/A", "n/a", users)
 	SetHeader(w, "GET")
 	return json.NewEncoder(w).Encode(render)
 }
@@ -65,7 +78,7 @@ func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient, l
 	if err != nil {
 		return err
 	}
-	render := ListGet{listID, newMembers}
+	render := makeList(listID, "N/A", "n/a", newMembers)
 	SetHeader(w, "PUT")
 	return json.NewEncoder(w).Encode(render)
 }
@@ -82,4 +95,16 @@ func getListID(r *http.Request) (int64, error) {
 		return -1, errors.New("Id has an incorrect format " + idStr)
 	}
 	return id, nil
+}
+
+func makeMember(au anaconda.User) TwitterMember {
+	return TwitterMember{ID: au.Id, Name: au.Name, Description: au.Description}
+}
+
+func makeList(id int64, name string, desc string, members []anaconda.User) TwitterList {
+	var memberList []TwitterMember
+	for _, u := range members {
+		memberList = append(memberList, makeMember(u))
+	}
+	return TwitterList{ID: id, Name: name, Description: desc, Members: memberList}
 }

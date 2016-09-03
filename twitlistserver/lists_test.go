@@ -6,8 +6,6 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"github.com/eric-fouillet/anaconda"
 )
 
 func TestGetLists(t *testing.T) {
@@ -29,11 +27,11 @@ func TestGetLists(t *testing.T) {
 	if !strings.Contains(rr.Body.String(), `"name":"list1"`) {
 		t.Fail()
 	}
-	result := new(struct{ Lists []anaconda.List })
+	result := new(TwitterLists)
 	if err := json.NewDecoder(rr.Body).Decode(result); err != nil {
 		t.Fail()
 	}
-	if len(result.Lists) != 5 {
+	if len(result.TLists) != 5 {
 		t.Fail()
 	}
 }

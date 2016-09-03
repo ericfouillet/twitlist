@@ -9,11 +9,12 @@ type alias Model =
   {
     id: Int
     , name: String
+    , description: String
     , members: List ListMember.Model
   }
 
-init: Int -> String -> Model
-init id name = Model id name []
+init: Int -> String -> String -> Model
+init id name desc = Model id name desc []
 
 -- UPDATE
 

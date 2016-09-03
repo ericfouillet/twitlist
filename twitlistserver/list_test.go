@@ -25,10 +25,10 @@ func TestGetList(t *testing.T) {
 	handler := http.HandlerFunc(MakeHandler(ListHandler, c))
 	handler.ServeHTTP(rr, req)
 
-	if !strings.Contains(rr.Body.String(), `"ID":1`) {
+	if !strings.Contains(rr.Body.String(), `"id":1`) {
 		t.Fail()
 	}
-	result := new(ListGet)
+	result := new(TwitterList)
 	if err := json.NewDecoder(rr.Body).Decode(result); err != nil {
 		t.Fail()
 	}
@@ -61,10 +61,10 @@ func TestPutList(t *testing.T) {
 	handler := http.HandlerFunc(MakeHandler(ListHandler, c))
 	handler.ServeHTTP(rr, req)
 
-	if !strings.Contains(rr.Body.String(), `"ID":1`) {
+	if !strings.Contains(rr.Body.String(), `"id":1`) {
 		t.Fail()
 	}
-	result := new(ListGet)
+	result := new(TwitterList)
 	if err := json.NewDecoder(rr.Body).Decode(result); err != nil {
 		t.Fail()
 	}
