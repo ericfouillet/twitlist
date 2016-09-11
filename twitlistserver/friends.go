@@ -2,7 +2,6 @@ package twitlistserver
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -24,18 +23,15 @@ type TwitterFriends struct {
 // It returns all contacts of the current user on Twitter.
 // This allows the UI to offer a list of users to add to a list.
 func FriendsHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {
-	log.Println("Getting all users")
 	users, err := tc.GetAllFriends()
 	if err != nil {
 		return err
 	}
-	log.Println("Got all users")
-	var allUsers []TwitterUser
+	allUsers := make([]TwitterUser, 0)
 	for _, u := range users {
 		allUsers = append(allUsers, TwitterUser{ID: u.Id, Name: u.Name, Description: u.Description})
 	}
 	render := TwitterFriends{Friends: allUsers}
-	log.Println("ready to render")
 	SetHeader(w, "GET")
 	return json.NewEncoder(w).Encode(render)
 }
