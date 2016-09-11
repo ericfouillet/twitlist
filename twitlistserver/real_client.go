@@ -18,6 +18,7 @@ type RealTwitterClient struct {
 	api            *anaconda.TwitterApi
 	lists          []anaconda.List
 	listMembers    map[int64][]anaconda.User
+	friends        []anaconda.User
 	lastUpdateTime time.Time
 	authenticated  bool
 }
@@ -91,6 +92,22 @@ func (tc *RealTwitterClient) GetAllLists() ([]anaconda.List, error) {
 	}
 	tc.lastUpdateTime = time.Now()
 	return tc.lists, nil
+}
+
+func (tc *RealTwitterClient) GetAllFriends() ([]anaconda.User, error) {
+	// Refresh the lists only every REFRESH_INTERVAL_MIN
+	if tc.friends != nil && len(tc.friends) > 0 && time.Since(tc.lastUpdateTime) < refreshIntervalMin {
+		log.Println("Re-using cached friends")
+		return tc.friends, nil
+	}
+	v := url.Values{}
+	v.Set("count", "30")
+	friendsCursor, err := tc.api.GetFriendsList(v)
+	if err != nil {
+		return nil, err
+	}
+	tc.friends = friendsCursor.Users
+	return tc.friends, nil
 }
 
 // UpdateListMembers updates the members of a list based on the

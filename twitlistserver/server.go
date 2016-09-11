@@ -19,6 +19,7 @@ type TwitterClient interface {
 	close()
 	getSelfID() (int64, error)
 	GetAllLists() ([]anaconda.List, error)
+	GetAllFriends() ([]anaconda.User, error)
 	GetListMembers(id int64) ([]anaconda.User, error)
 	UpdateListMembers(listID int64, requestedMembers int64arr) ([]anaconda.User, error)
 }
@@ -41,6 +42,7 @@ func RegisterHandlers() {
 	defer tc.close()
 	http.HandleFunc(pathPrefix, MakeHandler(ListsHandler, tc))
 	http.HandleFunc(pathPrefix+"list/", MakeHandler(ListHandler, tc))
+	http.HandleFunc("/friends/", MakeHandler(FriendsHandler, tc))
 }
 
 // MakeHandler builds a handler that uses takes a TwitterApi to

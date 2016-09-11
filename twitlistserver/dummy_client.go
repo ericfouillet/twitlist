@@ -13,6 +13,7 @@ type DummyTwitterClient struct {
 	api            *anaconda.TwitterApi
 	lists          []anaconda.List
 	listMembers    map[int64][]anaconda.User
+	friends        []anaconda.User
 	lastUpdateTime time.Time
 	authenticated  bool
 }
@@ -62,6 +63,24 @@ func (tc *DummyTwitterClient) GetAllLists() ([]anaconda.List, error) {
 	}
 	tc.lists = lists
 	return tc.lists, nil
+}
+
+// GetAllFriends gets all friends for the authenticated user.
+func (tc *DummyTwitterClient) GetAllFriends() ([]anaconda.User, error) {
+	friends := make([]anaconda.User, 0, 50)
+	var add func(lid int64)
+	var uid int64 = 1
+	add = func(lid int64) {
+		friends = append(friends, anaconda.User{Id: uid, Name: fmt.Sprint(lid, "user", uid)})
+		uid++
+	}
+	for i := 1; i <= 5; i++ {
+		for j := 0; j < 10; j++ {
+			add(int64(i))
+		}
+	}
+	tc.friends = friends
+	return tc.friends, nil
 }
 
 // UpdateListMembers updates the members of a list based on the new

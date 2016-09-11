@@ -15,19 +15,10 @@ import (
 // This contains only the information required to process actions on
 // the list.
 type TwitterList struct {
-	ID          int64           `json:"id"`
-	Name        string          `json:"name"`
-	Description string          `json:"description"`
-	Members     []TwitterMember `json:"members"`
-}
-
-// TwitterMember holds limited details about a Twitter list member.
-// Only essential details are used, since the UI does not need to have
-// everything to maintain the lists.
-type TwitterMember struct {
-	ID          int64  `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	ID          int64         `json:"id"`
+	Name        string        `json:"name"`
+	Description string        `json:"description"`
+	Members     []TwitterUser `json:"members"`
 }
 
 // ListHandler handles GET and POST to /lists/list/{id}
@@ -97,12 +88,12 @@ func getListID(r *http.Request) (int64, error) {
 	return id, nil
 }
 
-func makeMember(au anaconda.User) TwitterMember {
-	return TwitterMember{ID: au.Id, Name: au.Name, Description: au.Description}
+func makeMember(au anaconda.User) TwitterUser {
+	return TwitterUser{ID: au.Id, Name: au.Name, Description: au.Description}
 }
 
 func makeList(id int64, name string, desc string, members []anaconda.User) TwitterList {
-	memberList := make([]TwitterMember, 0)
+	memberList := make([]TwitterUser, 0)
 	for _, u := range members {
 		memberList = append(memberList, makeMember(u))
 	}
