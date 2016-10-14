@@ -17,6 +17,7 @@ The server is in Go (exposing a REST interface), the UI is in Elm. This is a wor
 - Install [Go](https://golang.org) and [Elm](http://elm-lang.org/)
 - Clone the repository
 - In _twitlistserver_: `go install .`
+- In _cmd/static_: `elm-make Lists.elm`
 - In _cmd_: `go run local.go`
 - The REST API is available at localhost:8080/lists
 
