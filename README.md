@@ -15,7 +15,7 @@ The server is in Go (exposing a REST interface), the UI is in Elm. This is a wor
 ## Installation:
 
 - Clone the repository
-- In _twitlistserver_: `lgo install .`
+- In _twitlistserver_: `go install .`
 - In _cmd_: `go run local.go`
 
 ## Dependencies
