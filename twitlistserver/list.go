@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/eric-fouillet/anaconda"
+	"github.com/ericfouillet/anaconda"
 )
 
 // TwitterList holds basic information about a Twitter list.

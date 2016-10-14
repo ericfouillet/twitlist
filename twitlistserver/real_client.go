@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/eric-fouillet/anaconda"
+	"github.com/ericfouillet/anaconda"
 )
 
 const refreshIntervalMin = 20 * time.Minute

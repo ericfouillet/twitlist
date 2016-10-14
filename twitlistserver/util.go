@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"sort"
 
-	"github.com/eric-fouillet/anaconda"
+	"github.com/ericfouillet/anaconda"
 )
 
 type int64arr []int64

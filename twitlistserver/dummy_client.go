@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/eric-fouillet/anaconda"
+	"github.com/ericfouillet/anaconda"
 )
 
 // DummyTwitterClient is a Twitter client serving fake data.

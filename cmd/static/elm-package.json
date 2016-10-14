@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "summary": "A simple Twitter list manager",
-    "repository": "https://github.com/eric-fouillet/twitlist.git",
+    "repository": "https://github.com/ericfouillet/twitlist.git",
     "license": "MIT",
     "source-directories": [
         "."

@@ -1,0 +1,66 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+DummyTwitterClient	dummy_client.go	/^type DummyTwitterClient struct {$/;"	d
+FriendsHandler	friends.go	/^func FriendsHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {$/;"	d
+GetAllFriends	dummy_client.go	/^func (tc *DummyTwitterClient) GetAllFriends() ([]anaconda.User, error) {$/;"	d
+GetAllFriends	real_client.go	/^func (tc *RealTwitterClient) GetAllFriends() ([]anaconda.User, error) {$/;"	d
+GetAllLists	dummy_client.go	/^func (tc *DummyTwitterClient) GetAllLists() ([]anaconda.List, error) {$/;"	d
+GetAllLists	real_client.go	/^func (tc *RealTwitterClient) GetAllLists() ([]anaconda.List, error) {$/;"	d
+GetListMembers	dummy_client.go	/^func (tc *DummyTwitterClient) GetListMembers(id int64) ([]anaconda.User, error) {$/;"	d
+GetListMembers	real_client.go	/^func (tc *RealTwitterClient) GetListMembers(id int64) ([]anaconda.User, error) {$/;"	d
+Len	util.go	/^func (a int64arr) Len() int           { return len(a) }$/;"	d
+Less	util.go	/^func (a int64arr) Less(i, j int) bool { return a[j] < a[j] }$/;"	d
+ListHandler	list.go	/^func ListHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {$/;"	d
+ListsHandler	lists.go	/^func ListsHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) error {$/;"	d
+MakeHandler	server.go	/^func MakeHandler(fn func(w http.ResponseWriter,$/;"	d
+MemberIDs	list.go	/^type MemberIDs []struct{ ID int64 }$/;"	d
+RealTwitterClient	real_client.go	/^type RealTwitterClient struct {$/;"	d
+RegisterHandlers	server.go	/^func RegisterHandlers() {$/;"	d
+SetHeader	util.go	/^func SetHeader(w http.ResponseWriter, method string) {$/;"	d
+Swap	util.go	/^func (a int64arr) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }$/;"	d
+TestAuthenticate	client_test.go	/^func TestAuthenticate(t *testing.T) {$/;"	d
+TestGetFriends	friends_test.go	/^func TestGetFriends(t *testing.T) {$/;"	d
+TestGetList	list_test.go	/^func TestGetList(t *testing.T) {$/;"	d
+TestGetLists	lists_test.go	/^func TestGetLists(t *testing.T) {$/;"	d
+TestPutList	list_test.go	/^func TestPutList(t *testing.T) {$/;"	d
+TestUserDiff	client_test.go	/^func TestUserDiff(t *testing.T) {$/;"	d
+TwitterClient	server.go	/^type TwitterClient interface {$/;"	d
+TwitterFriends	friends.go	/^type TwitterFriends struct {$/;"	d
+TwitterList	list.go	/^type TwitterList struct {$/;"	d
+TwitterLists	lists.go	/^type TwitterLists struct {$/;"	d
+TwitterUser	friends.go	/^type TwitterUser struct {$/;"	d
+UpdateListMembers	dummy_client.go	/^func (tc *DummyTwitterClient) UpdateListMembers(listID int64, requestedMembers int64arr) ([]anaconda.User, error) {$/;"	d
+UpdateListMembers	real_client.go	/^func (tc *RealTwitterClient) UpdateListMembers(listID int64, requestedMembers int64arr) ([]anaconda.User, error) {$/;"	d
+add	dummy_client.go	/^	var add func()$/;"	d
+add	dummy_client.go	/^	var add func(lid int64)$/;"	d
+authenticate	dummy_client.go	/^func (tc *DummyTwitterClient) authenticate() error {$/;"	d
+authenticate	real_client.go	/^func (tc *RealTwitterClient) authenticate() error {$/;"	d
+clientType	server.go	/^var clientType = flag.String("client", "dummy", "The client type to use (real\/dummy). Default is dummy.")$/;"	d
+close	dummy_client.go	/^func (tc *DummyTwitterClient) close() {$/;"	d
+close	real_client.go	/^func (tc *RealTwitterClient) close() {$/;"	d
+compareArrays	client_test.go	/^func compareArrays(a []int64, b []int64) bool {$/;"	d
+diffUsers	util.go	/^func diffUsers(existingMembers []anaconda.User, requestedMembers int64arr) (added []int64, unchanged []int64, destroyed []int64) {$/;"	d
+err	real_client.go	/^	var err error$/;"	d
+getListID	list.go	/^func getListID(r *http.Request) (int64, error) {$/;"	d
+getSelfID	dummy_client.go	/^func (tc *DummyTwitterClient) getSelfID() (int64, error) {$/;"	d
+getSelfID	real_client.go	/^func (tc *RealTwitterClient) getSelfID() (int64, error) {$/;"	d
+id	dummy_client.go	/^	var id int64 = 1$/;"	d
+idu	dummy_client.go	/^	var idu int64 = 1$/;"	d
+int64arr	util.go	/^type int64arr []int64$/;"	d
+listHandlerGet	list.go	/^func listHandlerGet(w http.ResponseWriter, r *http.Request, tc TwitterClient, listID int64) error {$/;"	d
+listHandlerPost	list.go	/^func listHandlerPost(w http.ResponseWriter, r *http.Request, tc TwitterClient, listID int64) error {$/;"	d
+makeList	list.go	/^func makeList(id int64, name string, desc string, members []anaconda.User) TwitterList {$/;"	d
+makeLists	lists.go	/^func makeLists(alists []anaconda.List) TwitterLists {$/;"	d
+makeMember	list.go	/^func makeMember(au anaconda.User) TwitterUser {$/;"	d
+members	list.go	/^	var members MemberIDs$/;"	d
+newUsers	dummy_client.go	/^	var newUsers []anaconda.User$/;"	d
+newUsers	real_client.go	/^	var newUsers, destroyedUsers []anaconda.User$/;"	d
+tc	server.go	/^	var tc TwitterClient$/;"	d
+to	server.go	/^var clientType = flag.String("client", "dummy", "The client type to use (real\/dummy). Default is dummy.")$/;"	d
+uid	dummy_client.go	/^	var uid int64 = 1$/;"	d
+updateMemberList	util.go	/^func updateMemberList(existing []anaconda.User, unchanged []int64, newUsers []anaconda.User) []anaconda.User {$/;"	d
+updated	util.go	/^	var updated []anaconda.User$/;"	d

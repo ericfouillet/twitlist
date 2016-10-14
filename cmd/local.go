@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/eric-fouillet/twitlist/twitlistserver"
+	"github.com/ericfouillet/twitlist/twitlistserver"
 )
 
 func main() {

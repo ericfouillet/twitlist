@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/eric-fouillet/anaconda"
+	"github.com/ericfouillet/anaconda"
 )
 
 // TwitterLists holds a list of TwitterList.

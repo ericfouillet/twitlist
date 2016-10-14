@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/eric-fouillet/twitlist.svg?branch=master)](https://travis-ci.org/eric-fouillet/twitlist)
+[![Build Status](https://travis-ci.org/ericfouillet/twitlist.svg?branch=master)](https://travis-ci.org/ericfouillet/twitlist)
 
 # twitlist
 

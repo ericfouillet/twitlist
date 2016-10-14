@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/eric-fouillet/anaconda"
+	"github.com/ericfouillet/anaconda"
 )
 
 const pathPrefix = "/lists/"

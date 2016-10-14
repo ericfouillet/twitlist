@@ -1,6 +1,6 @@
 package main
 
-import "github.com/eric-fouillet/twitlist/twitlistserver"
+import "github.com/ericfouillet/twitlist/twitlistserver"
 
 func init() {
 	twitlistserver.RegisterHandlers()

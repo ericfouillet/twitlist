@@ -31,6 +31,7 @@ func FriendsHandler(w http.ResponseWriter, r *http.Request, tc TwitterClient) er
 	for _, u := range users {
 		allUsers = append(allUsers, TwitterUser{ID: u.Id, Name: u.Name, Description: u.Description})
 	}
+
 	render := TwitterFriends{Friends: allUsers}
 	SetHeader(w, "GET")
 	return json.NewEncoder(w).Encode(render)

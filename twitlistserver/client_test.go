@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/eric-fouillet/anaconda"
+	"github.com/ericfouillet/anaconda"
 )
 
 func TestAuthenticate(t *testing.T) {
