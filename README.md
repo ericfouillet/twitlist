@@ -21,6 +21,8 @@ The server is in Go (exposing a REST interface), the UI is in Elm. This is a wor
 - In _cmd_: `go run local.go`
 - The REST API is available at localhost:8080/lists
 
+The application can also be deployed in Google App Engine (see in cmd/app.yaml)
+
 ## Dependencies
 
 This depends on a slightly modified version of [Anaconda](https://github.com/ChimeraCoder/anaconda), to add missing API calls. It is forked under my account.
